@@ -15,6 +15,15 @@ echo "==> Кернел (Metal для Core Image)"
 xcrun metal -c -fcikernel "$ROOT/src/Lumen.ci.metal" -o "$TMP/Lumen.air"
 xcrun metallib -cikernel "$TMP/Lumen.air" -o "$APP/Contents/Resources/Lumen.metallib"
 
+echo "==> Иконка"
+rm -rf "$TMP/AppIcon.iconset"; mkdir -p "$TMP/AppIcon.iconset"
+swift "$ROOT/src/icon.swift" "$TMP/icon-1024.png" 2>/dev/null
+for sz in 16 32 128 256 512; do
+    sips -z $sz $sz "$TMP/icon-1024.png" --out "$TMP/AppIcon.iconset/icon_${sz}x${sz}.png" >/dev/null
+    sips -z $((sz*2)) $((sz*2)) "$TMP/icon-1024.png" --out "$TMP/AppIcon.iconset/icon_${sz}x${sz}@2x.png" >/dev/null
+done
+iconutil -c icns "$TMP/AppIcon.iconset" -o "$APP/Contents/Resources/AppIcon.icns"
+
 echo "==> Компиляция"
 swiftc -O -parse-as-library -swift-version 5 \
     -framework AppKit -framework SwiftUI -framework MetalKit -framework CoreImage \
@@ -34,6 +43,7 @@ cat > "$APP/Contents/Info.plist" <<PLISTEOF
     <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
     <key>LSMinimumSystemVersion</key>      <string>26.0</string>
     <key>NSHighResolutionCapable</key>     <true/>
+    <key>CFBundleIconFile</key>            <string>AppIcon</string>
     <!-- «Открыть в программе → Lumen» для любых картинок -->
     <key>CFBundleDocumentTypes</key>
     <array><dict>

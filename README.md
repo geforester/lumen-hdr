@@ -33,6 +33,7 @@ lumen convert a.jpg --heic -o out.heic
   отношение HDR/SDR и пишет **ISO 21496-1** gain map (проверено: `HDRToneMap`, AlternateHeadroom
   = стопы, карта в полном разрешении). Apple-овской старой карты (`HDRGainMap`) и XMP `hdrgm`
   (Google Ultra HDR) нет.
+- `src/icon.swift` — иконка кодом (солнце над горизонтом и тусклое отражение), `build.sh` собирает из неё `.icns`.
 - Превью — `MTKView` с `rgba16Float` + `wantsExtendedDynamicRangeContent`, extended linear P3;
   превью считается по копии ≤2560 px, радиус размытия маски — в долях кадра, поэтому совпадает с экспортом.
 
